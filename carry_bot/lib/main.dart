@@ -1,4 +1,5 @@
 import 'package:carry_bot/config/theme/Themes.dart';
+import 'package:carry_bot/features/device/presentation/pages/device_page.dart';
 import 'package:flutter/material.dart';
 
 import 'features/home/presentation/pages/homepage.dart';
@@ -17,7 +18,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: darkTheme,
-      home: const HomePage(),
+      home: const DevicePage(),
     );
   }
 }

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 ThemeData darkTheme = ThemeData.dark().copyWith(
-  colorScheme: ColorScheme.fromSeed(seedColor: Colors.purple),
+  scaffoldBackgroundColor: Color(0xFF040D12),
+  colorScheme: ColorScheme.fromSeed(seedColor: Colors.teal),
   appBarTheme: AppBarTheme(color: Colors.teal),
   primaryColor: Colors.teal,
   elevatedButtonTheme: const ElevatedButtonThemeData(
@@ -16,7 +17,10 @@ ThemeData darkTheme = ThemeData.dark().copyWith(
     ),
   ),
   floatingActionButtonTheme: const FloatingActionButtonThemeData(
-    backgroundColor : Colors.teal,
-    foregroundColor: Colors.white
-  ),
+      backgroundColor: Colors.teal, foregroundColor: Colors.white),
 );
+
+/// 040D12
+/// 183D3D
+/// 5C8374
+/// 93B1A6

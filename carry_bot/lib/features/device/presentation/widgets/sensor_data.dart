@@ -54,7 +54,7 @@ class _SensorDataShowState extends State<SensorDataShow> {
           width: width,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(20)),
-            color: Color(0xFF232D3F),
+            color: Color(0xFF183D3D),
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -87,9 +87,9 @@ class _SensorDataShowState extends State<SensorDataShow> {
                     ? "${widget.sensor.name!.split(" ")[0]} : ${widget.sensor.value}"
                     : "Value : ${widget.sensor.value}",
                 style: TextStyle(
-                  color: Color(0xFF93B1A6),
-                  fontSize: 16,
-                ),
+                    color: Color(0xFF93B1A6),
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold),
               ),
             ],
           ),

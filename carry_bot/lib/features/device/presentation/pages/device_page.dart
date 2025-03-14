@@ -39,13 +39,21 @@ class _DevicePageState extends State<DevicePage> {
             width: w,
           ),
           SensorDataShow(
-            sensor: SensorModel(name: "Depth Sensor", value: 10.5, situation: "G",),
+            sensor: SensorModel(
+              name: "Depth Sensor",
+              value: 10.5,
+              situation: "G",
+            ),
             minimize: shrink,
           ),
-
-          ElevatedButton(onPressed: (){setState(() {
-            shrink = !shrink;
-          });}, child: Text("Shrink"),)
+          ElevatedButton(
+            onPressed: () {
+              setState(() {
+                shrink = !shrink;
+              });
+            },
+            child: Text("Shrink"),
+          )
         ],
       ),
     );

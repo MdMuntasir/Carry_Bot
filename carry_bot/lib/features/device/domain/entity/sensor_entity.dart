@@ -1,11 +1,11 @@
 class SensorEntity {
-  final String? distance;
-  final String? depth;
-  final String? weight;
+  final String? name;
+  final String? situation;
+  final double? value;
 
   const SensorEntity({
-    this.depth,
-    this.distance,
-    this.weight,
+    this.situation,
+    this.name,
+    this.value,
   });
 }

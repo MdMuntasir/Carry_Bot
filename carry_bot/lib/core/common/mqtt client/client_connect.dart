@@ -71,14 +71,14 @@ class BLEService {
       List<BluetoothService> services = await device.discoverServices();
       for (var service in services) {
         for (var char in service.characteristics) {
-          if (char.properties.write) { // ✅ Find first writable characteristic
+          if (char.properties.write) {
             characteristic = char;
             log("✅ Found writable characteristic: ${char.uuid}");
-            break;
+            return true;
           }
         }
       }
-      return true;
+
     }
 
       return false;
@@ -121,9 +121,9 @@ class BLEService {
   Future<void> sendData(String data) async {
     if (characteristic != null) {
       await characteristic!.write(data.codeUnits);
-      print("📤 Sent to ESP32: $data");
+      log("📤 Sent to ESP32: $data");
     } else {
-      print("⚠️ No connected device!");
+      log("⚠️ No connected device!");
     }
   }
 }

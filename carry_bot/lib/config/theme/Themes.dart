@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 ThemeData darkTheme = ThemeData.dark().copyWith(
   scaffoldBackgroundColor: Color(0xFF040D12),
@@ -18,6 +19,16 @@ ThemeData darkTheme = ThemeData.dark().copyWith(
   ),
   floatingActionButtonTheme: const FloatingActionButtonThemeData(
       backgroundColor: Colors.teal, foregroundColor: Colors.white),
+  textTheme: TextTheme(),
+  dialogTheme: DialogTheme(
+    titleTextStyle: TextStyle(
+      color: Color(0xFF183D3D),
+    ),
+    contentTextStyle: TextStyle(
+      color: Color(0xFF040D12)
+    ),
+  ),
+
 );
 
 /// 040D12

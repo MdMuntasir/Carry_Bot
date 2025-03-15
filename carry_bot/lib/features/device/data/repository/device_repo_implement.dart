@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:carry_bot/core/connection%20state/mqtt_state.dart';
+import 'package:carry_bot/core/connection%20state/data_state.dart';
 import 'package:carry_bot/core/network/connection_checker.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
 
@@ -21,32 +21,32 @@ class DeviceRepositoryImplementation implements DeviceRepository {
   );
 
   @override
-  Future<MQTTState> publish(
+  Future<DataState> publish(
     MqttServerClient client,
     String topic,
     String message,
   ) async {
     if (await connectionChecker.isConnected) {
-      remoteDeviceData.publishData(client, topic, message);
-      return MQTTSuccess("Published");
+      remoteDeviceData.mqttPublishData(client, topic, message);
+      return DataSuccess("Published");
     }
-    return MQTTFailed("No Internet Connection");
+    return DataFailed("No Internet Connection");
   }
 
   @override
-  Future<MQTTState<String>> subscribe(
+  Future<DataState<String>> subscribe(
     MqttServerClient client,
     String topic,
   ) async {
     if (await connectionChecker.isConnected) {
-      remoteDeviceData.subscribeData(client, topic, onMessageReceived,);
-      return MQTTSuccess("Subscribed");
+      remoteDeviceData.mqttSubscribeData(client, topic, onMessageReceived,);
+      return DataSuccess("Subscribed");
     }
-    return MQTTFailed("No Internet Connection");
+    return DataFailed("No Internet Connection");
   }
 
   @override
-  Future<MQTTState> connectClient(
+  Future<DataState> connectClient(
     String userName,
     String password,
     String clusterURL,
@@ -59,9 +59,9 @@ class DeviceRepositoryImplementation implements DeviceRepository {
       try {
         await client.connect(userName, password);
       } on Exception catch (e) {
-        MQTTFailed(e.toString());
+        DataFailed(e.toString());
       }
     }
-    return MQTTFailed("No Internet Connection");
+    return DataFailed("No Internet Connection");
   }
 }

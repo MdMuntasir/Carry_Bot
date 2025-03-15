@@ -1,23 +1,32 @@
-import 'package:carry_bot/core/connection%20state/mqtt_state.dart';
+import 'package:carry_bot/core/connection%20state/data_state.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
 
 abstract class RemoteDeviceData {
-  MQTTState<String> subscribeData(
+  DataState<String> mqttSubscribeData(
     MqttServerClient client,
     String topic,
     Function(String)? onMessageReceived,
   );
-  void publishData(
+  void mqttPublishData(
     MqttServerClient client,
     String topic,
+    String message,
+  );
+
+  DataState<String> bleSubscribeData(
+    MqttServerClient client,
+    Function(String)? onMessageReceived,
+  );
+  void blePublishData(
+    MqttServerClient client,
     String message,
   );
 }
 
 class RemoteDeviceDataImpl implements RemoteDeviceData {
   @override
-  void publishData(
+  void mqttPublishData(
     MqttServerClient client,
     String topic,
     String message,
@@ -29,7 +38,7 @@ class RemoteDeviceDataImpl implements RemoteDeviceData {
   }
 
   @override
-  MQTTState<String> subscribeData(
+  DataState<String> mqttSubscribeData(
     MqttServerClient client,
     String topic,
     Function(String)? onMessageReceived,
@@ -46,9 +55,26 @@ class RemoteDeviceDataImpl implements RemoteDeviceData {
           onMessageReceived(message);
         }
       });
-      return MQTTSuccess(message);
+      return DataSuccess(message);
     } on Exception catch (e) {
-      return MQTTFailed(e.toString());
+      return DataFailed(e.toString());
     }
+  }
+
+  @override
+  void blePublishData(
+    MqttServerClient client,
+    String message,
+  ) {
+    // TODO: implement blePublishData
+  }
+
+  @override
+  DataState<String> bleSubscribeData(
+    MqttServerClient client,
+    Function(String p1)? onMessageReceived,
+  ) {
+    // TODO: implement bleSubscribeData
+    throw UnimplementedError();
   }
 }

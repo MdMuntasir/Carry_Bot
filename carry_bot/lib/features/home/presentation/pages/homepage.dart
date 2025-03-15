@@ -69,12 +69,12 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> onDeviceSelect(BluetoothDevice device) async {
-    await device.connect();
-    if (device.isConnected) {
+    bool connected = await bleService.connectToDevice(device);
+
+    if (connected) {
       log("Device Connected"); //
       setState(() {
         selectedDevice = device;
-        bleService.connectedDevice = device;
       });
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -94,56 +94,59 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-          title: Center(
-        child: Text(
-          "Bot Controller",
-          style: GoogleFonts.signikaNegative(
-            textStyle: TextStyle(
-              color: Colors.white,
-              fontSize: 30,
-              fontWeight: FontWeight.bold,
+        appBar: AppBar(
+            title: Center(
+          child: Text(
+            "Bot Controller",
+            style: GoogleFonts.signikaNegative(
+              textStyle: TextStyle(
+                color: Colors.white,
+                fontSize: 30,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
-        ),
-      )),
-      body: BlocConsumer( listener: (context, state){}, builder: (context, state){
-        if(state is HomeScannedDevices){
-          return ListView.builder(
-            itemCount: devices.length,
-            itemBuilder: (context, index) {
-              final device = devices[index].device;
-              return ListTile(
-                title: Text(
-                  device.platformName,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                subtitle: Text(
-                  device.remoteId.toString(),
-                  style: TextStyle(color: Colors.white70),
-                ),
-                onTap: () async {
-                  await onDeviceSelect(device);
+        )),
+        body: BlocConsumer(
+          listener: (context, state) {},
+          builder: (context, state) {
+            if (state is HomeScannedDevices) {
+              return ListView.builder(
+                itemCount: devices.length,
+                itemBuilder: (context, index) {
+                  final device = devices[index].device;
+                  return ListTile(
+                    title: Text(
+                      device.platformName,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    subtitle: Text(
+                      device.remoteId.toString(),
+                      style: TextStyle(color: Colors.white70),
+                    ),
+                    onTap: () async {
+                      await onDeviceSelect(device);
+                    },
+                  );
                 },
               );
-            },
-          );
-        }
+            } else if (state is HomeScanFailedState) {
+              return Center(
+                child: Text(state.error),
+              );
+            } else if (state is HomeScanningDevices) {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            }
 
-        else if(state is HomeScanFailedState){
-          return Center(child: Text(state.error),);
-        }
-
-        else if(state is HomeScanningDevices){
-          return Center(child: CircularProgressIndicator(),);
-        }
-
-        return Center(child: CircularProgressIndicator(),);
-      },)
-
-    );
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          },
+        ));
   }
 }

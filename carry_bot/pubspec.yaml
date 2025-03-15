@@ -35,11 +35,12 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
   google_fonts: ^6.2.1
-  flutter_ble_peripheral: ^1.2.6
   flutter_bloc: ^9.1.0
-  bluetooth_low_energy: ^6.0.2
   mqtt_client: ^10.5.1
   internet_connection_checker_plus: ^2.7.1
+  flutter_blue_plus: ^1.35.3
+  permission_handler: ^11.3.0
+
 
 dev_dependencies:
   flutter_test:

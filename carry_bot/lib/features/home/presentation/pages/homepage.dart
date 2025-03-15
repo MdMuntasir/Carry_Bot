@@ -1,11 +1,9 @@
 import 'dart:developer';
-import 'package:carry_bot/core/common/mqtt%20client/client_connect.dart';
-import 'package:carry_bot/core/connection%20state/mqtt_state.dart';
-import 'package:carry_bot/core/network/connection_checker.dart';
-import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
-import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
+import 'package:carry_bot/core/common/mqtt%20client/client_connect.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_blue_plus/flutter_blue_plus.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -15,146 +13,122 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final BLEService bleService = BLEService();
+  List<ScanResult> devices = [];
+  BluetoothDevice? selectedDevice;
+  TextEditingController pinController = TextEditingController();
 
-  // void publishFunction() async {
-  //   MQTTClient mqttClient = MQTTClient();
-  //   MQTTState status = await mqttClient.connectClient(
-  //     "Muntasir",
-  //     "CarryB0T",
-  //     "ca4608428ecc49bf8d21c278b450ef13.s1.eu.hivemq.cloud",
-  //     "Redmi 6",
-  //   );
-  //
-  //   if (status is MQTTSuccess) {
-  //     RemoteHomeData remoteHomeData = RemoteHomeDataImpl();
-  //     ConnectionChecker connectionChecker =
-  //         ConnectionCheckerImpl(InternetConnection.createInstance());
-  //     HomeRepository homeRepository = HomeRepositoryImplementation(
-  //         status.data, remoteHomeData, connectionChecker);
-  //
-  //     MQTTState responseStat = await homeRepository.publish(
-  //       status.data,
-  //       "testMessage",
-  //       "This is a message from Redmi 6",
-  //     );
-  //     if (responseStat is MQTTFailed) {
-  //       if (context.mounted) {
-  //         ScaffoldMessenger.of(context).showSnackBar(
-  //           SnackBar(
-  //             content: Text("Connection Failed: ${responseStat.error}"),
-  //           ),
-  //         );
-  //       }
-  //     }
-  //   } else {
-  //     if (context.mounted) {
-  //       ScaffoldMessenger.of(context).showSnackBar(
-  //         SnackBar(
-  //           content: Text("Connection Failed: ${status.error}"),
-  //         ),
-  //       );
-  //     }
-  //   }
-  // }
-  //
-  // void subscribeFunction() async {
-  //   MQTTClient mqttClient = MQTTClient();
-  //   MQTTState status = await mqttClient.connectClient(
-  //     "Muntasir",
-  //     "CarryB0T",
-  //     "ca4608428ecc49bf8d21c278b450ef13.s1.eu.hivemq.cloud",
-  //     "Redmi 6",
-  //   );
-  //   if (status is MQTTSuccess) {
-  //     RemoteHomeData remoteHomeData = RemoteHomeDataImpl();
-  //     ConnectionChecker connectionChecker =
-  //         ConnectionCheckerImpl(InternetConnection.createInstance());
-  //     HomeRepository homeRepository = HomeRepositoryImplementation(
-  //       status.data,
-  //       remoteHomeData,
-  //       connectionChecker,
-  //     );
-  //
-  //     MQTTState responseStat =
-  //         await homeRepository.subscribe(status.data, "testMessage", (message) {
-  //       log(message);
-  //     });
-  //
-  //     if (responseStat is MQTTFailed) {
-  //       if (context.mounted) {
-  //         ScaffoldMessenger.of(context).showSnackBar(
-  //           SnackBar(
-  //             content: Text("Connection Failed: ${responseStat.error}"),
-  //           ),
-  //         );
-  //       }
-  //     }
-  //   } else {
-  //     if (context.mounted) {
-  //       ScaffoldMessenger.of(context).showSnackBar(
-  //         SnackBar(
-  //           content: Text("Connection Failed: ${status.error}"),
-  //         ),
-  //       );
-  //     }
-  //   }
-  // }
+  void checkBluetoothStatus(BuildContext context) {
+    FlutterBluePlus.adapterState.listen((BluetoothAdapterState state) async {
+      if (state == BluetoothAdapterState.off) {
+        _showEnableBluetoothDialog(context);
+      }
+    });
+  }
 
-  @override
-  Widget build(BuildContext context) {
-    double w = MediaQuery.sizeOf(context).width;
-    double h = MediaQuery.sizeOf(context).height;
-
-    return Scaffold(
-      appBar: AppBar(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(10),
-            bottomRight: Radius.circular(10),
+  void _showEnableBluetoothDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text("Enable Bluetooth"),
+        content: Text("Bluetooth is required to scan for devices."),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text("Cancel"),
           ),
-        ),
-        title: Center(
-          child: Text(
-            "Carry Bot",
-            style: GoogleFonts.signikaNegative(
-              textStyle: TextStyle(
-                  color: Colors.white,
-                  fontSize: 30,
-                  fontWeight: FontWeight.bold),
-            ),
-          ),
-        ),
-      ),
-      body: Stack(
-        alignment: Alignment.bottomRight,
-        children: [
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            spacing: 10,
-            children: [
-              SizedBox(
-                width: w,
-              ),
-
-              ElevatedButton(
-                onPressed: (){},
-                child: Text(
-                  "Search Devices",
-                  style: GoogleFonts.lexend(),
-                ),
-              )
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.all(25),
-            child: FloatingActionButton(
-              onPressed: () {},
-              child: Icon(Icons.search),
-            ),
+          TextButton(
+            onPressed: () async {
+              Navigator.pop(context);
+              await FlutterBluePlus.turnOn(); // 🔥 Works only on Android
+            },
+            child: Text("Turn On"),
           ),
         ],
       ),
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    bleService.onScanUpdated = (newDevices) {
+      setState(() {
+        devices = newDevices;
+      });
+    };
+    bleService.startScanning();
+  }
+
+  @override
+  void dispose() {
+    bleService.stopScanning();
+    super.dispose();
+  }
+
+  Future<void> onDeviceSelect(BluetoothDevice device) async {
+    await device.connect();
+    if (device.isConnected) {
+      log("Device Connected"); //
+      setState(() {
+        selectedDevice = device;
+        bleService.connectedDevice = device;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Connected"),
+        ),
+      );
+      bleService.enableNotifications();
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Couldn't connect to device"),
+        ),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+          title: Center(
+        child: Text(
+          "Bot Controller",
+          style: GoogleFonts.signikaNegative(
+            textStyle: TextStyle(
+              color: Colors.white,
+              fontSize: 30,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+      )),
+      body: devices.isEmpty
+          ? Center(child: CircularProgressIndicator())
+          : ListView.builder(
+              itemCount: devices.length,
+              itemBuilder: (context, index) {
+                final device = devices[index].device;
+                return ListTile(
+                  title: Text(
+                    device.platformName,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  subtitle: Text(
+                    device.remoteId.toString(),
+                    style: TextStyle(color: Colors.white70),
+                  ),
+                  onTap: () async {
+                    await onDeviceSelect(device);
+                  },
+                );
+              },
+            ),
     );
   }
 }

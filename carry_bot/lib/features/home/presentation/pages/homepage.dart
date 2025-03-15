@@ -72,7 +72,7 @@ class _HomePageState extends State<HomePage> {
     bool connected = await bleService.connectToDevice(device);
 
     if (connected) {
-      log("Device Connected"); //
+      log("Device Connected");
       setState(() {
         selectedDevice = device;
       });
@@ -112,9 +112,9 @@ class _HomePageState extends State<HomePage> {
           builder: (context, state) {
             if (state is HomeScannedDevices) {
               return ListView.builder(
-                itemCount: devices.length,
+                itemCount: state.devices.length,
                 itemBuilder: (context, index) {
-                  final device = devices[index].device;
+                  final device = state.devices[index].device;
                   return ListTile(
                     title: Text(
                       device.platformName,

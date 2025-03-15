@@ -109,7 +109,7 @@ class BLEService {
               String message = String.fromCharCodes(value);
               log("📩 New message: $message");
               if (onMessageReceived != null) {
-                onMessageReceived!(message); // 🔥 Auto-update UI
+                onMessageReceived!(message);
               }
             });
           }

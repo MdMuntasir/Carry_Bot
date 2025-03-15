@@ -1,7 +1,9 @@
 import 'dart:developer';
 
 import 'package:carry_bot/core/common/mqtt%20client/client_connect.dart';
+import 'package:carry_bot/features/home/presentation/bloc/home_state.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -105,30 +107,43 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       )),
-      body: devices.isEmpty
-          ? Center(child: CircularProgressIndicator())
-          : ListView.builder(
-              itemCount: devices.length,
-              itemBuilder: (context, index) {
-                final device = devices[index].device;
-                return ListTile(
-                  title: Text(
-                    device.platformName,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
+      body: BlocConsumer( listener: (context, state){}, builder: (context, state){
+        if(state is HomeScannedDevices){
+          return ListView.builder(
+            itemCount: devices.length,
+            itemBuilder: (context, index) {
+              final device = devices[index].device;
+              return ListTile(
+                title: Text(
+                  device.platformName,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
                   ),
-                  subtitle: Text(
-                    device.remoteId.toString(),
-                    style: TextStyle(color: Colors.white70),
-                  ),
-                  onTap: () async {
-                    await onDeviceSelect(device);
-                  },
-                );
-              },
-            ),
+                ),
+                subtitle: Text(
+                  device.remoteId.toString(),
+                  style: TextStyle(color: Colors.white70),
+                ),
+                onTap: () async {
+                  await onDeviceSelect(device);
+                },
+              );
+            },
+          );
+        }
+
+        else if(state is HomeScanFailedState){
+          return Center(child: Text(state.error),);
+        }
+
+        else if(state is HomeScanningDevices){
+          return Center(child: CircularProgressIndicator(),);
+        }
+
+        return Center(child: CircularProgressIndicator(),);
+      },)
+
     );
   }
 }

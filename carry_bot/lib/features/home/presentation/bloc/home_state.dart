@@ -12,19 +12,22 @@ class HomeInitialState extends HomeState{}
 
 class HomeScanningDevices extends HomeState{}
 
-class HomeScannedDevices extends HomeState{
-  final List<ScanResult> devices;
-  const HomeScannedDevices(this.devices);
-}
+class HomeScannedDevices extends HomeState{}
 
 class HomeScanFailedState extends HomeState{
   final String error;
   const HomeScanFailedState(this.error);
 }
 
-class HomeOnRefreshClicked extends HomeActionState{}
 
-class HomeOnDeviceClicked extends HomeActionState{
+class HomeDeviceConnected extends HomeActionState{
   final BluetoothDevice device;
-  const HomeOnDeviceClicked(this.device);
+  const HomeDeviceConnected(this.device);
 }
+
+class HomeDeviceConnectionFailed extends HomeActionState{
+  final String error;
+  const HomeDeviceConnectionFailed(this.error);
+}
+
+class HomeNoBluetoothConnection extends HomeActionState{}

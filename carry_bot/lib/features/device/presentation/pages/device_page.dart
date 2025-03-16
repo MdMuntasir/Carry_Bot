@@ -1,10 +1,16 @@
 import 'package:carry_bot/features/device/data/model/sensor_model.dart';
+import 'package:carry_bot/features/device/presentation/widgets/car_controller.dart';
 import 'package:carry_bot/features/device/presentation/widgets/sensor_data.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class DevicePage extends StatefulWidget {
-  const DevicePage({super.key});
+  final BluetoothDevice device;
+  const DevicePage({
+    super.key,
+    required this.device,
+  });
 
   @override
   State<DevicePage> createState() => _DevicePageState();
@@ -18,9 +24,16 @@ class _DevicePageState extends State<DevicePage> {
     double h = MediaQuery.sizeOf(context).height;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Center(
-          child: Text(
+        appBar: AppBar(
+          leading: IconButton(
+            onPressed: () {},
+            icon: Icon(
+              Icons.close,
+              color: Colors.white,
+            ),
+          ),
+          centerTitle: true,
+          title: Text(
             "Carry Bot",
             style: GoogleFonts.signikaNegative(
               textStyle: TextStyle(
@@ -30,32 +43,71 @@ class _DevicePageState extends State<DevicePage> {
             ),
           ),
         ),
-      ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          SizedBox(
-            width: w,
+        body: AnimatedContainer(
+          duration: Duration(milliseconds: 500),
+          height: h,
+          child: Stack(
+            alignment: Alignment.topRight,
+            children: [
+              Padding(
+                padding: EdgeInsets.only(
+                  left: shrink ? w * .03 : w * .15,
+                  bottom: shrink ? 0 : h * .05,
+                ),
+                child: Wrap(
+                  runSpacing: 15,
+                  spacing: 15,
+                  children: [
+                    SizedBox(
+                      width: w,
+                    ),
+                    SensorDataShow(
+                      sensor: SensorModel(
+                        name: "Distance Sensor",
+                        value: 10.5,
+                        situation: "G",
+                      ),
+                      minimize: shrink,
+                    ),
+                    SensorDataShow(
+                      sensor: SensorModel(
+                        name: "Depth Sensor",
+                        value: 10.5,
+                        situation: "Y",
+                      ),
+                      minimize: shrink,
+                    ),
+                    SensorDataShow(
+                      sensor: SensorModel(
+                        name: "Load Sensor",
+                        value: 10.5,
+                        situation: "R",
+                      ),
+                      minimize: shrink,
+                    ),
+                  ],
+                ),
+              ),
+
+              AnimatedPositioned(duration: Duration(milliseconds: 500), child: CarController(), ),
+
+              AnimatedPositioned(
+                duration: Duration(milliseconds: 500),
+                bottom: 5,
+                child: Padding(
+                  padding: const EdgeInsets.all(15),
+                  child: FloatingActionButton(
+                    onPressed: () {
+                      setState(() {
+                        shrink = !shrink;
+                      });
+                    },
+                    child: Text(shrink ? "Auto" : "Manual"),
+                  ),
+                ),
+              )
+            ],
           ),
-          SensorDataShow(
-            sensor: SensorModel(
-              name: "Depth Sensor",
-              value: 10.5,
-              situation: "G",
-            ),
-            minimize: shrink,
-          ),
-          ElevatedButton(
-            onPressed: () {
-              setState(() {
-                shrink = !shrink;
-              });
-            },
-            child: Text("Shrink"),
-          )
-        ],
-      ),
-    );
+        ));
   }
 }

@@ -1,7 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
-import 'package:carry_bot/core/common/mqtt%20client/client_state.dart';
+import 'package:carry_bot/core/common/client/client_state.dart';
 import 'package:carry_bot/core/connection%20state/data_state.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:mqtt_client/mqtt_client.dart';
@@ -48,9 +48,9 @@ class BLEService {
   Function(List<ScanResult>)? onScanUpdated;
   Function(String)? onMessageReceived;
 
-  void startScanning() {
+  Future<void> startScanning() async{
     scanResults.clear();
-    FlutterBluePlus.startScan(timeout: Duration(seconds: 5));
+    await FlutterBluePlus.startScan(timeout: Duration(seconds: 5));
 
     FlutterBluePlus.scanResults.listen((results) {
       scanResults = results;
@@ -73,7 +73,6 @@ class BLEService {
         for (var char in service.characteristics) {
           if (char.properties.write) {
             characteristic = char;
-            log("✅ Found writable characteristic: ${char.uuid}");
             return true;
           }
         }
@@ -84,17 +83,6 @@ class BLEService {
       return false;
 
 
-    // List<BluetoothService> services = await device.discoverServices();
-    // for (var service in services) {
-    //   for (var characteristic in service.characteristics) {
-    //     if (characteristic.uuid.toString() == "PIN_CHARACTERISTIC_UUID") {
-    //       await characteristic.write(pin.codeUnits);
-    //       log("🔑 PIN Sent: $pin");
-    //     }
-    //   }
-    // }
-
-    connectedDevice = device;
   }
 
   void enableNotifications() async {
@@ -107,7 +95,6 @@ class BLEService {
             await char.setNotifyValue(true);
             char.lastValueStream.listen((value) {
               String message = String.fromCharCodes(value);
-              log("📩 New message: $message");
               if (onMessageReceived != null) {
                 onMessageReceived!(message);
               }
@@ -121,9 +108,6 @@ class BLEService {
   Future<void> sendData(String data) async {
     if (characteristic != null) {
       await characteristic!.write(data.codeUnits);
-      log("📤 Sent to ESP32: $data");
-    } else {
-      log("⚠️ No connected device!");
     }
   }
 }

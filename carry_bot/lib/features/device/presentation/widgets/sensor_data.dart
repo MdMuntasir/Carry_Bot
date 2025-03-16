@@ -39,62 +39,60 @@ class _SensorDataShowState extends State<SensorDataShow> {
     }
 
     if (widget.minimize) {
-      height = h * .2;
+      height = h * .15;
       width = w * .45;
     } else {
-      height = h * .28;
-      width = w * .6;
+      height = h * .25;
+      width = w * .7;
     }
 
-    return Column(
-      children: [
-        AnimatedContainer(
-          duration: Duration(milliseconds: 300),
-          height: height,
-          width: width,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(20)),
-            color: Color(0xFF183D3D),
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              widget.minimize
-                  ? SizedBox(
-                      width: w,
-                    )
-                  : Text(
-                      widget.sensor.name!,
-                      style: TextStyle(
-                        color: Color(0xFF93B1A6),
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: AnimatedContainer(
-                  duration: Duration(milliseconds: 300),
-                  height: widget.minimize ? height * .6 : height * .55,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                    color: color,
+    return AnimatedContainer(
+      duration: Duration(milliseconds: 300),
+      height: height,
+      width: width,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.all(Radius.circular(20)),
+        color: Color(0xFF183D3D),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          widget.minimize
+              ? SizedBox(
+                  width: w,
+                )
+              : Text(
+                  widget.sensor.name!,
+                  style: TextStyle(
+                    color: Color(0xFF93B1A6),
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: AnimatedContainer(
+              duration: Duration(milliseconds: 300),
+              height: widget.minimize ? height * .6 : height * .55,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(10)),
+                color: color,
               ),
-              Text(
-                widget.minimize
-                    ? "${widget.sensor.name!.split(" ")[0]} : ${widget.sensor.value}"
-                    : "Value : ${widget.sensor.value}",
-                style: TextStyle(
-                    color: Color(0xFF93B1A6),
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold),
-              ),
-            ],
+            ),
           ),
-        ),
-      ],
+          Flexible(
+            child: Text(
+              widget.minimize
+                  ? "${widget.sensor.name!.split(" ")[0]} : ${widget.sensor.value}"
+                  : "Value : ${widget.sensor.value}",
+              style: TextStyle(
+                  color: Color(0xFF93B1A6),
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

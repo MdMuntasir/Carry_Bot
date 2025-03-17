@@ -2,6 +2,14 @@ import 'package:carry_bot/core/connection%20state/data_state.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
 
 abstract class DeviceRepository {
+  Future<void> listenBle(
+    Function(String)? onMessageReceived,
+  );
+
+  Future<DataState> sendMessageBle(
+    String message,
+  );
+
   Future<DataState> publish(
     MqttServerClient client,
     String topic,
@@ -10,6 +18,7 @@ abstract class DeviceRepository {
   Future<DataState<String>> subscribe(
     MqttServerClient client,
     String topic,
+    Function(String)? onMessageReceived,
   );
 
   Future<DataState> connectClient(
@@ -17,6 +26,4 @@ abstract class DeviceRepository {
     String password,
     String clusterURL,
   );
-
-
 }

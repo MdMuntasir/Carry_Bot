@@ -44,7 +44,7 @@ class _DevicePageState extends State<DevicePage> {
           ),
         ),
         body: AnimatedContainer(
-          duration: Duration(milliseconds: 500),
+          duration: Duration(milliseconds: 300),
           height: h,
           child: Stack(
             alignment: Alignment.topRight,
@@ -90,11 +90,11 @@ class _DevicePageState extends State<DevicePage> {
               ),
               AnimatedPositioned(
                 bottom: shrink ? 0 : -h * .5,
-                duration: Duration(milliseconds: 500),
+                duration: Duration(milliseconds: 300),
                 child: CarController(),
               ),
               AnimatedPositioned(
-                duration: Duration(milliseconds: 500),
+                duration: Duration(milliseconds: 300),
                 bottom: shrink ? 125 : 5,
                 right: shrink ? 135 : 0,
                 child: Padding(

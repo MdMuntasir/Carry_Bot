@@ -48,7 +48,7 @@ class BLEService {
   Function(List<ScanResult>)? onScanUpdated;
   Function(String)? onMessageReceived;
 
-  Future<void> startScanning() async{
+  Future<void> startScanning() async {
     scanResults.clear();
     await FlutterBluePlus.startScan(timeout: Duration(seconds: 5));
 
@@ -67,7 +67,7 @@ class BLEService {
   Future<bool> connectToDevice(BluetoothDevice device) async {
     await device.connect();
 
-    if(device.isConnected) {
+    if (device.isConnected) {
       List<BluetoothService> services = await device.discoverServices();
       for (var service in services) {
         for (var char in service.characteristics) {
@@ -77,15 +77,12 @@ class BLEService {
           }
         }
       }
-
     }
 
-      return false;
-
-
+    return false;
   }
 
-  void enableNotifications() async {
+  Future<void> enableNotifications() async {
     if (connectedDevice != null) {
       List<BluetoothService> services =
           await connectedDevice!.discoverServices();
@@ -105,9 +102,11 @@ class BLEService {
     }
   }
 
-  Future<void> sendData(String data) async {
+  Future<bool> sendData(String data) async {
     if (characteristic != null) {
       await characteristic!.write(data.codeUnits);
+      return true;
     }
+    return false;
   }
 }

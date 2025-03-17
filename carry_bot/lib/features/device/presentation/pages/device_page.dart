@@ -88,12 +88,15 @@ class _DevicePageState extends State<DevicePage> {
                   ],
                 ),
               ),
-
-              AnimatedPositioned(duration: Duration(milliseconds: 500), child: CarController(), ),
-
+              AnimatedPositioned(
+                bottom: shrink ? 0 : -h * .5,
+                duration: Duration(milliseconds: 500),
+                child: CarController(),
+              ),
               AnimatedPositioned(
                 duration: Duration(milliseconds: 500),
-                bottom: 5,
+                bottom: shrink ? 125 : 5,
+                right: shrink ? 135 : 0,
                 child: Padding(
                   padding: const EdgeInsets.all(15),
                   child: FloatingActionButton(

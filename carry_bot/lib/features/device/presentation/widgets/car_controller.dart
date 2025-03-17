@@ -22,55 +22,63 @@ class CarController extends StatelessWidget {
         alignment: Alignment.center,
         children: [
           Positioned(
-            top: -30,
+            top: 30,
             child: CarButton(
               rotate: 0,
+              move: "front",
             ),
           ),
           Positioned(
-            right: -15,
-            top: -15,
+            right: 50,
+            top: 50,
             child: CarButton(
               rotate: 45,
+              move: "fr",
             ),
           ),
           Positioned(
-            right: -15,
+            right: 30,
             child: CarButton(
               rotate: 90,
+              move: "right",
             ),
           ),
           Positioned(
-            right: -15,
-            bottom: -15,
+            right: 50,
+            bottom: 50,
             child: CarButton(
               rotate: 135,
+              move: "br",
             ),
           ),
           Positioned(
-            bottom: -30,
+            bottom: 30,
             child: CarButton(
               rotate: 180,
+              move: "back",
             ),
           ),
           Positioned(
-            left: -15,
-            bottom: -15,
+            left: 50,
+            bottom: 50,
             child: CarButton(
               rotate: 225,
+              move: "bl",
             ),
           ),
           Positioned(
-            left: -15,
+            left: 30,
             child: CarButton(
               rotate: 270,
+              move: "left",
             ),
           ),
           Positioned(
-            left: -15,
-            top: -15,
+            left: 50,
+            top: 50,
             child: CarButton(
               rotate: 315,
+              move: "fl",
             ),
           ),
         ],

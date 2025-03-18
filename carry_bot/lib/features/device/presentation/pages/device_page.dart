@@ -1,3 +1,4 @@
+import 'package:carry_bot/core/common/widgets/floating_widget.dart';
 import 'package:carry_bot/features/device/data/model/sensor_model.dart';
 import 'package:carry_bot/features/device/presentation/widgets/car_controller.dart';
 import 'package:carry_bot/features/device/presentation/widgets/sensor_data.dart';
@@ -103,6 +104,7 @@ class _DevicePageState extends State<DevicePage> {
                     onPressed: () {
                       setState(() {
                         shrink = !shrink;
+                        FloatingWidgetManager.showFloatingWidget(context, "This is a hagu message");
                       });
                     },
                     child: Text(shrink ? "Auto" : "Manual"),

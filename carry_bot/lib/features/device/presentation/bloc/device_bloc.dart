@@ -4,5 +4,7 @@ import 'device_event.dart';
 import 'device_state.dart';
 
 class DeviceBloc extends Bloc<DeviceEvent,DeviceState>{
-  DeviceBloc():super(DeviceInitialState()){}
+  DeviceBloc():super(DeviceInitialState()){
+
+  }
 }

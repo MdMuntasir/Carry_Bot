@@ -41,6 +41,7 @@ dependencies:
   flutter_blue_plus: ^1.35.3
   permission_handler: ^11.3.0
   get_it: ^8.0.3
+  font_awesome_flutter: ^10.8.0
 
 
 dev_dependencies:

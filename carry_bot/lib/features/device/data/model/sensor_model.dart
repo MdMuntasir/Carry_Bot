@@ -1,4 +1,4 @@
-import '../../domain/entity/sensor_entity.dart';
+import 'package:carry_bot/features/device/domain/entity/sensor_entity.dart';
 
 class SensorModel extends SensorEntity {
   SensorModel({
@@ -9,20 +9,17 @@ class SensorModel extends SensorEntity {
 
   factory SensorModel.fromJson(Map<String, dynamic> map) {
     return SensorModel(
-      name: map["name"],
-      situation: map["situation"],
-      value: map["value"],
+      name: map["name"] ?? "",
+      situation: map["situation"] ?? "",
+      value: map["value"] ?? "",
     );
   }
 
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
-      "name": name,
-      "situation" : situation,
-      "value": value,
+      "name": name ?? "",
+      "situation" : situation ?? "",
+      "value": value ?? "",
     };
   }
 }
-
-
-

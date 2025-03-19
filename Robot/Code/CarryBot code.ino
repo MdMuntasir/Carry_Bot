@@ -24,7 +24,7 @@ class MyCallbacks : public BLECharacteristicCallbacks {
     String value = pCharacteristic->getValue();
     if (value.length() > 0) {
       Serial.print("📩 Received: ");
-      Serial.println(value.c_str()); // Print received data
+      Serial.println(value.c_str()); 
     }
   }
 };
@@ -176,7 +176,7 @@ float getDepth(){
     digitalWrite(depthTrig, LOW);
 
     long duration = pulseIn(depthEcho, HIGH);
-    float distance = duration * 0.034 / 2; // Convert to cm
+    float distance = duration * 0.034 / 2; 
     return distance;
 }
 

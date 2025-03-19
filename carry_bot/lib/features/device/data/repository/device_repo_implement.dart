@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:carry_bot/core/common/widgets/floating_widget.dart';
 import 'package:carry_bot/core/connection%20state/data_state.dart';
-import 'package:carry_bot/core/global%20variables/sensor_data.dart';
+import 'package:carry_bot/features/device/data/data%20source/sensor_data.dart';
 import 'package:carry_bot/core/network/connection_checker.dart';
 import 'package:carry_bot/features/device/data/data%20source/ble_source.dart';
 import 'package:carry_bot/injection_Container.dart';
@@ -11,7 +11,7 @@ import 'package:carry_bot/injection_Container.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
 
-import '../../../../core/common/model & entities/sensor_model.dart';
+import '../model/sensor_model.dart';
 import '../../domain/repository/device_repository.dart';
 import '../data source/remote_source.dart';
 

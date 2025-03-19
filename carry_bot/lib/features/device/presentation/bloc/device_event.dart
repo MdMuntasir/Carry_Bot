@@ -1,8 +1,13 @@
+import 'package:flutter/cupertino.dart';
+
 sealed class DeviceEvent {
   const DeviceEvent();
 }
 
-class DeviceInitialEvent extends DeviceEvent {}
+class DeviceInitialEvent extends DeviceEvent {
+  final BuildContext context;
+  const DeviceInitialEvent(this.context);
+}
 
 class DeviceManualModeEvent extends DeviceEvent {
   final bool isManual;
@@ -10,3 +15,4 @@ class DeviceManualModeEvent extends DeviceEvent {
     this.isManual,
   );
 }
+

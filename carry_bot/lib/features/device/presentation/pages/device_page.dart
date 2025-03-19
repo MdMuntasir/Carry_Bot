@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../../../core/common/model & entities/sensor_model.dart';
+import '../../data/model/sensor_model.dart';
 
 class DevicePage extends StatefulWidget {
   final BluetoothDevice device;

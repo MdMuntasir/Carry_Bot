@@ -1,10 +1,11 @@
-import 'package:carry_bot/core/common/widgets/floating_widget.dart';
-import 'package:carry_bot/features/device/data/model/sensor_model.dart';
+
 import 'package:carry_bot/features/device/presentation/widgets/car_controller.dart';
 import 'package:carry_bot/features/device/presentation/widgets/sensor_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+import '../../../../core/common/model & entities/sensor_model.dart';
 
 class DevicePage extends StatefulWidget {
   final BluetoothDevice device;
@@ -104,7 +105,6 @@ class _DevicePageState extends State<DevicePage> {
                     onPressed: () {
                       setState(() {
                         shrink = !shrink;
-                        FloatingWidgetManager.showFloatingWidget(context, "This is a hagu message");
                       });
                     },
                     child: Text(shrink ? "Auto" : "Manual"),

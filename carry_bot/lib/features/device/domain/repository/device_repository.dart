@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
 
 abstract class DeviceRepository {
-  Future<void> listenBle(
+  Future<DataState> listenBle(
     BuildContext context,
   );
 
@@ -11,20 +11,20 @@ abstract class DeviceRepository {
     String message,
   );
 
-  Future<DataState> publish(
-    MqttServerClient client,
-    String topic,
-    String message,
-  );
-  Future<DataState<String>> subscribe(
-    MqttServerClient client,
-    String topic,
-    Function(String)? onMessageReceived,
-  );
-
-  Future<DataState> connectClient(
-    String userName,
-    String password,
-    String clusterURL,
-  );
+  // Future<DataState> publish(
+  //   MqttServerClient client,
+  //   String topic,
+  //   String message,
+  // );
+  // Future<DataState<String>> subscribe(
+  //   MqttServerClient client,
+  //   String topic,
+  //   Function(String)? onMessageReceived,
+  // );
+  //
+  // Future<DataState> connectClient(
+  //   String userName,
+  //   String password,
+  //   String clusterURL,
+  // );
 }

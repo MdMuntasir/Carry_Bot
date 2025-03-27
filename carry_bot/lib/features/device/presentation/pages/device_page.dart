@@ -1,7 +1,14 @@
+import 'dart:developer';
 
+import 'package:carry_bot/core/common/client/client_connect.dart';
+import 'package:carry_bot/features/device/data/data%20source/sensor_data.dart';
+import 'package:carry_bot/features/device/presentation/bloc/device_bloc.dart';
+import 'package:carry_bot/features/device/presentation/bloc/device_event.dart';
 import 'package:carry_bot/features/device/presentation/widgets/car_controller.dart';
 import 'package:carry_bot/features/device/presentation/widgets/sensor_data.dart';
+import 'package:carry_bot/injection_Container.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -19,7 +26,23 @@ class DevicePage extends StatefulWidget {
 }
 
 class _DevicePageState extends State<DevicePage> {
+  List<SensorModel> sensorInfo = [];
   bool shrink = false;
+
+  @override
+  void initState() {
+    serviceLocator<BLEService>().enableNotifications();
+
+    context.read<DeviceBloc>().add(DeviceInitialEvent(context));
+    serviceLocator<SensorInformation>().setListener((sensorData) {
+      setState(() {
+        sensorInfo = sensorData;
+
+      });
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     double w = MediaQuery.sizeOf(context).width;
@@ -59,35 +82,16 @@ class _DevicePageState extends State<DevicePage> {
                 child: Wrap(
                   runSpacing: 15,
                   spacing: 15,
-                  children: [
-                    SizedBox(
-                      width: w,
-                    ),
-                    SensorDataShow(
-                      sensor: SensorModel(
-                        name: "Distance Sensor",
-                        value: 10.5,
-                        situation: "G",
-                      ),
-                      minimize: shrink,
-                    ),
-                    SensorDataShow(
-                      sensor: SensorModel(
-                        name: "Depth Sensor",
-                        value: 10.5,
-                        situation: "Y",
-                      ),
-                      minimize: shrink,
-                    ),
-                    SensorDataShow(
-                      sensor: SensorModel(
-                        name: "Load Sensor",
-                        value: 10.5,
-                        situation: "R",
-                      ),
-                      minimize: shrink,
-                    ),
-                  ],
+                  children: List.generate(sensorInfo.length + 1, (index) {
+                    return index == 0
+                        ? SizedBox(
+                            width: w,
+                          )
+                        : SensorDataShow(
+                            sensor: sensorInfo[index - 1],
+                            minimize: shrink,
+                          );
+                  }),
                 ),
               ),
               AnimatedPositioned(

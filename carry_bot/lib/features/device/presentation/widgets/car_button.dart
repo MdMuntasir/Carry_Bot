@@ -21,6 +21,12 @@ class _CarButtonState extends State<CarButton> {
   Timer? timer;
 
   @override
+  void dispose() {
+    timer?.cancel();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     double h = MediaQuery.sizeOf(context).height;
     double angle = (3.1416 * widget.rotate) / 180;
@@ -29,28 +35,33 @@ class _CarButtonState extends State<CarButton> {
       angle: angle,
       child: InkWell(
         onTapDown: (_) {
-          setState(() {
-            tapped = true;
-          });
-          timer =
-              Timer.periodic(const Duration(milliseconds: 100), (timer) async {
-            sentData = await serviceLocator<BLEService>().sendData(widget.move);
-          });
-          if (!sentData) {
-            timer?.cancel();
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                duration: Duration(milliseconds: 1500),
-                content: Text("Unfortunately buttons not working"),
-              ),
-            );
+          if (context.mounted) {
+            setState(() {
+              tapped = true;
+            });
+            timer = Timer.periodic(const Duration(milliseconds: 100),
+                (timer) async {
+              sentData =
+                  await serviceLocator<BLEService>().sendData(widget.move);
+            });
+            if (!sentData) {
+              timer?.cancel();
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  duration: Duration(milliseconds: 1500),
+                  content: Text("Unfortunately buttons not working"),
+                ),
+              );
+            }
           }
         },
         onTapUp: (_) {
-          setState(() {
-            tapped = false;
-          });
-          timer?.cancel();
+          if (context.mounted) {
+            setState(() {
+              tapped = false;
+            });
+            timer?.cancel();
+          }
         },
         child: ClipPath(
           clipper: CustomClipPath(),

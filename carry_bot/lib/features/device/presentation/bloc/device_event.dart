@@ -9,10 +9,17 @@ class DeviceInitialEvent extends DeviceEvent {
   const DeviceInitialEvent(this.context);
 }
 
-class DeviceManualModeEvent extends DeviceEvent {
+class DeviceModeSwitchEvent extends DeviceEvent {
   final bool isManual;
-  const DeviceManualModeEvent(
+  const DeviceModeSwitchEvent(
     this.isManual,
   );
 }
+
+class DeviceSendMessageEvent extends DeviceEvent{
+  final String message;
+  const DeviceSendMessageEvent(this.message);
+}
+
+class DeviceDisconnectEvent extends DeviceEvent{}
 

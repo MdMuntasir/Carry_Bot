@@ -66,20 +66,25 @@ class BLEService {
 
   Future<bool> connectToDevice(BluetoothDevice device) async {
     await device.connect();
-
     if (device.isConnected) {
       List<BluetoothService> services = await device.discoverServices();
       for (var service in services) {
         for (var char in service.characteristics) {
           if (char.properties.write) {
             characteristic = char;
+            connectedDevice = device;
             return true;
           }
         }
       }
     }
-
     return false;
+  }
+
+  Future<void> disconnectDevice()async{
+    if(connectedDevice!.isConnected){
+      await connectedDevice?.disconnect();
+    }
   }
 
   Future<void> enableNotifications() async {

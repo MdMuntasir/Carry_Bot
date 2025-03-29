@@ -85,22 +85,23 @@ class DeviceRepositoryImplementation implements DeviceRepository {
   ) async {
     try {
       await bleDeviceData.listenMessage((message) {
-        Map<String, dynamic> jsonData = jsonDecode(message);
+        if (message.startsWith("{") && message.endsWith("}")) {
+          Map<String, dynamic> jsonData = jsonDecode(message);
 
-        if (jsonData.containsKey("sensors")) {
-          List<SensorModel> sensors = [];
-          for (Map<String, dynamic> sensor in jsonData["sensors"]) {
-            sensors.add(SensorModel.fromJson(sensor));
+          if (jsonData.containsKey("sensors")) {
+            List<SensorModel> sensors = [];
+            for (Map<String, dynamic> sensor in jsonData["sensors"]) {
+              sensors.add(SensorModel.fromJson(sensor));
+            }
+            serviceLocator<SensorInformation>().setInfo(sensors);
+          } else if (jsonData.containsKey("message")) {
+            FloatingWidgetManager.showFloatingWidget(
+                context, jsonData["message"]);
           }
-          serviceLocator<SensorInformation>().setInfo(sensors);
-        } else if (jsonData.containsKey("message")) {
-          FloatingWidgetManager.showFloatingWidget(
-              context, jsonData["message"]);
         }
       });
       return DataSuccess("Successfully Listening");
-    }
-    on Exception catch(e){
+    } on Exception catch (e) {
       return DataFailed(e.toString());
     }
   }

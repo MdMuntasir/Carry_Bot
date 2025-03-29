@@ -1,3 +1,6 @@
+
+
+
 import 'package:carry_bot/features/device/domain/entity/sensor_entity.dart';
 
 class SensorModel extends SensorEntity {
@@ -11,7 +14,7 @@ class SensorModel extends SensorEntity {
     return SensorModel(
       name: map["name"] ?? "",
       situation: map["situation"] ?? "",
-      value: map["value"] ?? "",
+      value: map["value"] != 0 ? map["value"] : 0.0,
     );
   }
 
@@ -19,7 +22,7 @@ class SensorModel extends SensorEntity {
     return <String, dynamic>{
       "name": name ?? "",
       "situation" : situation ?? "",
-      "value": value ?? "",
+      "value": value ?? 0.0,
     };
   }
 }

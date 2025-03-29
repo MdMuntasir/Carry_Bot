@@ -76,8 +76,7 @@ class _HomePageState extends State<HomePage> {
                       content: Text("Connected"),
                     ),
                   );
-                  serviceLocator<BLEService>().enableNotifications();
-                  Navigator.pushReplacement(
+                  Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => DevicePage(

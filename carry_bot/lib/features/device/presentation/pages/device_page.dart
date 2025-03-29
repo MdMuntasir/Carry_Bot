@@ -1,9 +1,8 @@
-import 'dart:developer';
-
 import 'package:carry_bot/core/common/client/client_connect.dart';
 import 'package:carry_bot/features/device/data/data%20source/sensor_data.dart';
 import 'package:carry_bot/features/device/presentation/bloc/device_bloc.dart';
 import 'package:carry_bot/features/device/presentation/bloc/device_event.dart';
+import 'package:carry_bot/features/device/presentation/bloc/device_state.dart';
 import 'package:carry_bot/features/device/presentation/widgets/car_controller.dart';
 import 'package:carry_bot/features/device/presentation/widgets/sensor_data.dart';
 import 'package:carry_bot/injection_Container.dart';
@@ -37,9 +36,9 @@ class _DevicePageState extends State<DevicePage> {
     serviceLocator<SensorInformation>().setListener((sensorData) {
       setState(() {
         sensorInfo = sensorData;
-
       });
     });
+
     super.initState();
   }
 
@@ -51,7 +50,12 @@ class _DevicePageState extends State<DevicePage> {
     return Scaffold(
         appBar: AppBar(
           leading: IconButton(
-            onPressed: () {},
+            onPressed: () async{
+              await serviceLocator<BLEService>().disconnectDevice();
+              if(context.mounted) {
+                Navigator.of(context).pop();
+            }
+            },
             icon: Icon(
               Icons.close,
               color: Colors.white,
@@ -71,52 +75,61 @@ class _DevicePageState extends State<DevicePage> {
         body: AnimatedContainer(
           duration: Duration(milliseconds: 300),
           height: h,
-          child: Stack(
-            alignment: Alignment.topRight,
-            children: [
-              Padding(
-                padding: EdgeInsets.only(
-                  left: shrink ? w * .03 : w * .15,
-                  bottom: shrink ? 0 : h * .05,
-                ),
-                child: Wrap(
-                  runSpacing: 15,
-                  spacing: 15,
-                  children: List.generate(sensorInfo.length + 1, (index) {
-                    return index == 0
-                        ? SizedBox(
-                            width: w,
-                          )
-                        : SensorDataShow(
-                            sensor: sensorInfo[index - 1],
-                            minimize: shrink,
-                          );
-                  }),
-                ),
-              ),
-              AnimatedPositioned(
-                bottom: shrink ? 0 : -h * .5,
-                duration: Duration(milliseconds: 300),
-                child: CarController(),
-              ),
-              AnimatedPositioned(
-                duration: Duration(milliseconds: 300),
-                bottom: shrink ? 125 : 5,
-                right: shrink ? 135 : 0,
-                child: Padding(
-                  padding: const EdgeInsets.all(15),
-                  child: FloatingActionButton(
-                    onPressed: () {
-                      setState(() {
-                        shrink = !shrink;
-                      });
-                    },
-                    child: Text(shrink ? "Auto" : "Manual"),
-                  ),
-                ),
-              )
-            ],
-          ),
+          child: BlocBuilder(
+              bloc: context.read<DeviceBloc>(),
+              builder: (context, state) {
+                if (state is DeviceLoadingState) {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+                return Stack(
+                  alignment: Alignment.topRight,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(
+                        left: shrink ? w * .03 : w * .15,
+                        bottom: shrink ? 0 : h * .05,
+                      ),
+                      child: Wrap(
+                        runSpacing: 15,
+                        spacing: 15,
+                        children: List.generate(sensorInfo.length + 1, (index) {
+                          return index == 0
+                              ? SizedBox(
+                                  width: w,
+                                )
+                              : SensorDataShow(
+                                  sensor: sensorInfo[index - 1],
+                                  minimize: shrink,
+                                );
+                        }),
+                      ),
+                    ),
+                    AnimatedPositioned(
+                      bottom: shrink ? 0 : -h * .5,
+                      duration: Duration(milliseconds: 300),
+                      child: CarController(),
+                    ),
+                    AnimatedPositioned(
+                      duration: Duration(milliseconds: 300),
+                      bottom: shrink ? 125 : 5,
+                      right: shrink ? 135 : 0,
+                      child: Padding(
+                        padding: const EdgeInsets.all(15),
+                        child: FloatingActionButton(
+                          onPressed: () {
+                            setState(() {
+                              shrink = !shrink;
+                            });
+                          },
+                          child: Text(shrink ? "Auto" : "Manual"),
+                        ),
+                      ),
+                    )
+                  ],
+                );
+              }),
         ));
   }
 }

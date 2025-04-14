@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import '../../../../core/common/client/client_connect.dart';
 import '../../../../injection_Container.dart';
@@ -34,33 +35,53 @@ class _CarButtonState extends State<CarButton> {
     return Transform.rotate(
       angle: angle,
       child: InkWell(
-        onTapDown: (_) {
-          if (context.mounted) {
-            setState(() {
-              tapped = true;
-            });
-            timer = Timer.periodic(const Duration(milliseconds: 100),
-                (timer) async {
-              sentData =
-                  await serviceLocator<BLEService>().sendData(widget.move);
-            });
-            if (!sentData) {
-              timer?.cancel();
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  duration: Duration(milliseconds: 1500),
-                  content: Text("Unfortunately buttons not working"),
-                ),
-              );
+        onTapDown: (_) async {
+          if (!mounted) return;
+          setState(() => tapped = true);
+          timer?.cancel();
+          timer =
+              Timer.periodic(const Duration(milliseconds: 100), (timer) async {
+            if (!mounted) {
+              timer.cancel();
+              return;
             }
-          }
+            try {
+              sentData = await serviceLocator<BLEService>()
+                  .sendData(jsonEncode({"move": widget.move}));
+
+              if (!sentData) {
+                timer.cancel();
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      duration: Duration(milliseconds: 1500),
+                      content: Text("Unfortunately buttons not working"),
+                    ),
+                  );
+                }
+              }
+            } catch (e) {
+              if (context.mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    duration: Duration(milliseconds: 1500),
+                    content: Text("Error : ${e.toString()}"),
+                  ),
+                );
+              }
+              timer.cancel();
+            }
+          });
         },
-        onTapUp: (_) {
-          if (context.mounted) {
+        onTapUp: (_) async{
+
+          if (mounted) {
             setState(() {
               tapped = false;
             });
             timer?.cancel();
+            sentData = await serviceLocator<BLEService>()
+                .sendData(jsonEncode({"move": "stop"}));
           }
         },
         child: ClipPath(

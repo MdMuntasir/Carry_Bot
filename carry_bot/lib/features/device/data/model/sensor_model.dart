@@ -1,6 +1,3 @@
-
-
-
 import 'package:carry_bot/features/device/domain/entity/sensor_entity.dart';
 
 class SensorModel extends SensorEntity {
@@ -14,7 +11,7 @@ class SensorModel extends SensorEntity {
     return SensorModel(
       name: map["name"] ?? "",
       situation: map["situation"] ?? "",
-      value: map["value"] != 0 ? map["value"] : 0.0,
+      value: map["value"] * 1.0,
     );
   }
 

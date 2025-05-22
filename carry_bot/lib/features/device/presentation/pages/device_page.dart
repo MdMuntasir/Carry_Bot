@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:carry_bot/core/common/client/client_connect.dart';
 import 'package:carry_bot/features/device/data/data%20source/sensor_data.dart';
 import 'package:carry_bot/features/device/presentation/bloc/device_bloc.dart';
@@ -118,7 +120,13 @@ class _DevicePageState extends State<DevicePage> {
                       child: Padding(
                         padding: const EdgeInsets.all(15),
                         child: FloatingActionButton(
-                          onPressed: () {
+                          onPressed: () async{
+                            !shrink?
+                            await serviceLocator<BLEService>()
+                                .sendData(jsonEncode({"mode": "manual"})):
+                            await serviceLocator<BLEService>()
+                                .sendData(jsonEncode({"mode": "auto"}))
+                            ;
                             setState(() {
                               shrink = !shrink;
                             });
